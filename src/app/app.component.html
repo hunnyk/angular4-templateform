@@ -1,20 +1,48 @@
-<!--The content below is only a placeholder and can be replaced.-->
-<div style="text-align:center">
-  <h1>
-    Welcome to {{ title }}!
-  </h1>
-  <img width="300" alt="Angular Logo" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNTAgMjUwIj4KICAgIDxwYXRoIGZpbGw9IiNERDAwMzEiIGQ9Ik0xMjUgMzBMMzEuOSA2My4ybDE0LjIgMTIzLjFMMTI1IDIzMGw3OC45LTQzLjcgMTQuMi0xMjMuMXoiIC8+CiAgICA8cGF0aCBmaWxsPSIjQzMwMDJGIiBkPSJNMTI1IDMwdjIyLjItLjFWMjMwbDc4LjktNDMuNyAxNC4yLTEyMy4xTDEyNSAzMHoiIC8+CiAgICA8cGF0aCAgZmlsbD0iI0ZGRkZGRiIgZD0iTTEyNSA1Mi4xTDY2LjggMTgyLjZoMjEuN2wxMS43LTI5LjJoNDkuNGwxMS43IDI5LjJIMTgzTDEyNSA1Mi4xem0xNyA4My4zaC0zNGwxNy00MC45IDE3IDQwLjl6IiAvPgogIDwvc3ZnPg==">
+<div>
+  <h1>{{title}}</h1>
 </div>
-<h2>Here are some links to help you start: </h2>
-<ul>
-  <li>
-    <h2><a target="_blank" rel="noopener" href="https://angular.io/tutorial">Tour of Heroes</a></h2>
-  </li>
-  <li>
-    <h2><a target="_blank" rel="noopener" href="https://github.com/angular/angular-cli/wiki">CLI Documentation</a></h2>
-  </li>
-  <li>
-    <h2><a target="_blank" rel="noopener" href="https://blog.angular.io/">Angular blog</a></h2>
-  </li>
-</ul>
+<div class="container">
+  <form #memform="ngForm" (ngSubmit)="onClickSubmit(memform.value);memform.reset();">
+    <input type="hidden" name="mem_id" [ngModel]="mem_id">
+    <div class="formgroup">
+      <input type="text" name="firstname" placeholder="Enter FirstName" [ngModel]="firstname">
+    </div>
+    <div class="formgroup">
+      <input type="text" name="lastname" placeholder="Enter LastName" [ngModel]="lastname">
+    </div>
+    <button type="submit" *ngIf="!idToUpdate">Insert</button>
+    <button type="submit" *ngIf="idToUpdate">Update</button>
+    <!--<button type="button">Cancel</button>-->
+  </form>
+</div>
+<br/>
+<div class="container">
+  <table id="example">
+    <thead><tr><th>firstname</th>
+    <th>lastname</th>
+    <th>delete</th>
+    <th>edit</th></tr></thead>
+    <tbody>
+    <tr *ngFor="let mem of memservice.data">
+      <td *ngIf="!contentEdit; else show">{{mem.firstname}}</td>
+      <ng-template #show>
+        <td *ngIf="iid === mem.mem_id; else other"><input type="text" value="{{mem.firstname}}"></td>
+      </ng-template>
+      <ng-template #other><td>{{mem.firstname}}</td> </ng-template>
 
+      <td *ngIf="!contentEdit; else show1">{{mem.lastname}}</td>
+      <ng-template #show1>
+        <td *ngIf="iid === mem.mem_id; else other1"><input type="text" value="{{mem.lastname}}"></td>
+      </ng-template>
+      <ng-template #other1><td>{{mem.lastname}}</td> </ng-template>
+
+      <td><button (click)="onDelete(mem.mem_id)">Delete</button></td>
+      <td *ngIf="!contentEdit; else show2">
+        <button (click)="onFetch(mem.mem_id)">Edit</button></td>
+      <ng-template #show2>
+          <td><button type="submit" (click)="onClickSubmit(memform.value)">Update</button></td>
+      </ng-template>
+    </tr>
+    </tbody>
+  </table>
+</div>
